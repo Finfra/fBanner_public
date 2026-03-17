@@ -1,0 +1,497 @@
+openapi: 3.1.0
+info:
+  title: fBanner REST API
+  description: >
+    REST API for fBanner macOS application. Exposes core features (file loading,
+    split configuration, export) over HTTP for automation via curl, Postman, or
+    custom scripts. The server is disabled by default and must be manually enabled
+    in the app settings. By default it binds to localhost (127.0.0.1) only;
+    external access can be enabled with CIDR-based IP filtering.
+  version: 1.0.0
+  contact:
+    name: fBanner
+  license:
+    name: Proprietary
+
+servers:
+  - url: http://localhost:3011
+    description: Default local server (localhost only)
+
+paths:
+  /:
+    get:
+      operationId: healthCheck
+      summary: Health check
+      description: Returns server status, app name, version, and port.
+      responses:
+        "200":
+          description: Server is running
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthCheckResponse"
+
+  /api/status:
+    get:
+      operationId: getStatus
+      summary: Get application status
+      description: >
+        Returns the current application state including loaded file info,
+        split configuration, and export progress.
+      responses:
+        "200":
+          description: Current application status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+              examples:
+                empty:
+                  summary: No file loaded
+                  value:
+                    success: true
+                    data:
+                      appState: empty
+                      file: null
+                      config: null
+                loaded:
+                  summary: File loaded
+                  value:
+                    success: true
+                    data:
+                      appState: loaded
+                      file:
+                        fileName: banner
+                        fileExtension: png
+                        category: bitmap
+                        pixelWidth: 1920
+                        pixelHeight: 1080
+                        url: /path/to/banner.png
+                      config:
+                        rows: 2
+                        cols: 3
+                        ratioW: 1.0
+                        ratioH: 1.0
+                        exportFormat: bitmap
+                        jpgQuality: 0.8
+                        exportNameTemplate: "{name}_{rr}-{cc}"
+                exporting:
+                  summary: Export in progress
+                  value:
+                    success: true
+                    data:
+                      appState: exporting
+                      progress: 0.45
+
+  /api/config:
+    get:
+      operationId: getConfig
+      summary: Get current split configuration
+      description: Returns the current grid split and export settings.
+      responses:
+        "200":
+          description: Current configuration
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/SplitConfig"
+
+    put:
+      operationId: updateConfig
+      summary: Update split configuration
+      description: >
+        Partially updates the split configuration. Only provided fields are
+        changed; omitted fields retain their current values. UI updates in
+        real-time (ConfigPanelView, MiniMapView).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SplitConfigUpdate"
+      responses:
+        "200":
+          description: Updated configuration (full config returned)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/SplitConfig"
+        "400":
+          description: Invalid parameter value
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/load:
+    post:
+      operationId: loadFile
+      summary: Load a file
+      description: >
+        Loads an image, PDF, or SVG file by path. The file appears in the
+        app's DropZoneView after loading. Supported formats: PNG, JPG, JPEG,
+        TIFF, BMP, GIF, PDF, SVG.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - path
+              properties:
+                path:
+                  type: string
+                  description: Absolute path to the input file
+                  example: /path/to/banner.png
+      responses:
+        "200":
+          description: File loaded successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/FileInfo"
+        "400":
+          description: Unsupported file format or invalid path
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                success: false
+                error: "Unsupported file format. (PNG, JPG, TIFF, BMP, GIF, PDF, SVG)"
+
+  /api/export:
+    post:
+      operationId: exportFiles
+      summary: Export split files
+      description: >
+        Exports the currently loaded file as grid-split output files to the
+        specified directory. Requires a file to be loaded first via /api/load.
+        The app must have write permission to the output directory.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - outputDir
+              properties:
+                outputDir:
+                  type: string
+                  description: Absolute path to the output directory
+                  example: /path/to/output
+      responses:
+        "200":
+          description: Export completed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ExportResult"
+        "409":
+          description: No file loaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                success: false
+                error: "No file loaded. Load a file first via /api/load."
+
+  /api/split:
+    post:
+      operationId: splitOneStep
+      summary: One-step split (load + configure + export)
+      description: >
+        Performs file loading, configuration update, and export in a single
+        request. This is the recommended endpoint for automation scripts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SplitRequest"
+      responses:
+        "200":
+          description: Split completed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ExportResult"
+        "400":
+          description: Invalid parameters or unsupported file format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    SuccessResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          type: string
+          description: Human-readable error message
+
+    HealthCheckResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        app:
+          type: string
+          example: fBanner
+        version:
+          type: string
+          example: "1.0"
+        port:
+          type: integer
+          example: 3011
+
+    FileInfo:
+      type: object
+      properties:
+        fileName:
+          type: string
+          description: File name without extension
+          example: banner
+        fileExtension:
+          type: string
+          description: File extension
+          example: png
+        category:
+          type: string
+          enum: [bitmap, pdf, svg]
+          description: File category
+        pixelWidth:
+          type: integer
+          description: Image width in pixels
+          example: 1920
+        pixelHeight:
+          type: integer
+          description: Image height in pixels
+          example: 1080
+        url:
+          type: string
+          description: Absolute file path
+          example: /path/to/banner.png
+
+    SplitConfig:
+      type: object
+      properties:
+        rows:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Number of vertical splits
+          example: 2
+        cols:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Number of horizontal splits
+          example: 3
+        ratioW:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+          description: Horizontal ratio
+          example: 1.0
+        ratioH:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+          description: Vertical ratio
+          example: 1.0
+        exportFormat:
+          type: string
+          enum: [bitmap, jpg, svg, pdf]
+          description: Output file format
+          example: bitmap
+        jpgQuality:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 1.0
+          description: JPEG quality (only applicable when exportFormat is bitmap)
+          example: 0.8
+        pdfExportMode:
+          type: string
+          enum: [firstPage, allPages, selectedPage]
+          description: PDF export mode (only applicable for PDF input)
+          example: firstPage
+        selectedPdfPage:
+          type: integer
+          minimum: 1
+          description: Selected PDF page number (only when pdfExportMode is selectedPage)
+          example: 1
+        exportNameTemplate:
+          type: string
+          description: >
+            Output filename template. Placeholders: {name} = original filename,
+            {rr} = zero-padded row, {cc} = zero-padded column.
+          example: "{name}_{rr}-{cc}"
+
+    SplitConfigUpdate:
+      description: >
+        Partial update for split configuration. All fields are optional;
+        only provided fields will be updated.
+      type: object
+      properties:
+        rows:
+          type: integer
+          minimum: 1
+          maximum: 100
+        cols:
+          type: integer
+          minimum: 1
+          maximum: 100
+        ratioW:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+        ratioH:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+        exportFormat:
+          type: string
+          enum: [bitmap, jpg, svg, pdf]
+        jpgQuality:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 1.0
+        pdfExportMode:
+          type: string
+          enum: [firstPage, allPages, selectedPage]
+        selectedPdfPage:
+          type: integer
+          minimum: 1
+        exportNameTemplate:
+          type: string
+
+    SplitRequest:
+      type: object
+      required:
+        - path
+        - outputDir
+      properties:
+        path:
+          type: string
+          description: Absolute path to the input file
+          example: /tmp/banner.png
+        outputDir:
+          type: string
+          description: Absolute path to the output directory
+          example: /tmp/output
+        rows:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 2
+          description: Number of vertical splits
+        cols:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 2
+          description: Number of horizontal splits
+        ratioW:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+          default: 1.0
+        ratioH:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+          default: 1.0
+        exportFormat:
+          type: string
+          enum: [bitmap, jpg, svg, pdf]
+          default: bitmap
+        jpgQuality:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 1.0
+          default: 0.8
+        exportNameTemplate:
+          type: string
+          default: "{name}_{rr}-{cc}"
+
+    ExportResult:
+      type: object
+      properties:
+        fileCount:
+          type: integer
+          description: Number of exported files
+          example: 6
+        outputDir:
+          type: string
+          description: Output directory path
+          example: /path/to/output
+        files:
+          type: array
+          items:
+            type: string
+          description: List of exported filenames
+          example:
+            - banner_01-01.png
+            - banner_01-02.png
+            - banner_01-03.png
+            - banner_02-01.png
+            - banner_02-02.png
+            - banner_02-03.png
