@@ -24,8 +24,17 @@
 - 05_Advanced/
   - History.md: 작업 내역 관리, 썸네일 리뷰, 원본 이미지 분할 설정(복원) 방법
   - Localization.md: 8개 국어 지원 및 UI 자동 언어 대응
-- 06_FAQ_and_Troubleshooting/
-  - Troubleshooting.md: 대용량 이미지 처리 한계, 권한 오류, PDF 페이지 분할 이슈
+- 06_REST_API/
+  - REST_API.md: REST API 서버 사용법, 7개 엔드포인트 레퍼런스, 보안 정책(CIDR 접근 제어)
+  - API_Examples.md: cURL 예제, 자동화 스크립트 활용법
+    - 참조: `_public/api/openapi.yaml`
+- 07_Automation/
+  - ClaudeCodeSkill.md: Claude Code Skill 설치 및 사용법 (slash command 기반)
+    - 참조: `_public/agents/claude/README.md`, `_public/agents/claude/skills/fbanner/SKILL.md`
+  - MCP_Server.md: MCP(Model Context Protocol) 서버 설정 가이드 (Claude Desktop / Claude Code 연동)
+    - 참조: `_public/mcp/`
+- 08_FAQ_and_Troubleshooting/
+  - Troubleshooting.md: 대용량 이미지 처리 한계, 권한 오류, PDF 페이지 분할 이슈, API 연결 오류
 - 99_Appendix/
   - Glossary.md: 주요 용어 사전 다국어 매핑표
 
@@ -38,6 +47,9 @@
 - 기획서 및 스펙: `_doc_design/Spec.md`, `_doc_design/UI.md`
 - 이슈 현황: `Issue.md`
 - 라이브러리 레포트: `_doc_work/lib-report.md`
+- REST API 명세: `_public/api/openapi.yaml`
+- Claude Code Skill: `_public/agents/claude/`
+- MCP 서버: `_public/mcp/`
 
 ---
 본 README는 매뉴얼 확장을 위한 청사진 역할을 합니다. 작성해야 할 리스트의 폴더를 구성하고 체크리스트를 관리하세요.

@@ -1,0 +1,35 @@
+{
+  "name": "fbanner-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for fBanner image/PDF/SVG grid splitting via REST API",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "fbanner-mcp": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "mcp",
+    "banner",
+    "image-split",
+    "fbanner",
+    "model-context-protocol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nowage/fBanner.git",
+    "directory": "_public/mcp"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "license": "MIT"
+}
