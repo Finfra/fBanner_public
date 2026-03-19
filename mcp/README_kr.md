@@ -187,7 +187,7 @@ fBanner 서버 상태를 확인합니다.
 
 **사용 예시** (Claude에게 요청):
 ```
-/Users/me/Desktop/banner.png 파일을 fBanner에 로드해줘
+_public/resource/contents/example1.png 파일을 fBanner에 로드해줘
 ```
 
 ---
@@ -204,7 +204,7 @@ fBanner 서버 상태를 확인합니다.
 
 **사용 예시** (Claude에게 요청):
 ```
-분리된 파일을 ~/Desktop/output으로 내보내줘
+분리된 파일을 _public/resource/contents_result으로 내보내줘
 ```
 
 ---
@@ -229,7 +229,7 @@ fBanner 서버 상태를 확인합니다.
 
 **사용 예시** (Claude에게 요청):
 ```
-/Users/me/Desktop/banner.png를 3x4 그리드로 분리해서 ~/Desktop/output에 PNG로 저장해줘
+_public/resource/contents/example1.png를 3x4 그리드로 분리해서 _public/resource/contents_result에 PNG로 저장해줘
 ```
 
 ---

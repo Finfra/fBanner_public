@@ -19,7 +19,7 @@ API 서버는 **기본적으로 비활성화** 상태이며, 설정에서 명시
 - API 서버는 **기본적으로 비활성화** 상태이며, 설정에서 명시적으로 활성화해야 합니다.
 - 기본적으로 **localhost (127.0.0.1)** 연결만 허용됩니다.
 - 설정의 "외부 접근 허용" 체크박스를 통해 외부 접근을 활성화할 수 있으며, 허용할 IP 범위를 CIDR 형식(예: `192.168.0.0/24`)으로 지정할 수 있습니다.
-- 허용된 CIDR 범위 밖의 IP에서 접속 시 `403 Forbidden` 응답을 반환합니다.
+- 허용된 CIDR 범위 밖의 IP에서 접속 시 연결이 즉시 거부(cancel)됩니다 (HTTP 응답 없음).
 - localhost는 CIDR 설정과 관계없이 항상 허용됩니다.
 
 ---
@@ -106,8 +106,8 @@ Content-Type: application/json
 | `cols` | integer | 아니오 | - | 가로 분할 수 (1~100) |
 | `ratioW` | number | 아니오 | - | 가로 비율 (0.1~10.0) |
 | `ratioH` | number | 아니오 | - | 세로 비율 (0.1~10.0) |
-| `exportFormat` | string | 아니오 | - | 출력 형식: `bitmap`, `jpg`, `svg`, `pdf` |
-| `jpgQuality` | number | 아니오 | - | JPEG 품질 (0.1~1.0, exportFormat이 bitmap일 때) |
+| `exportFormat` | string | 아니오 | - | 출력 형식: `bitmap` (PNG), `jpg`, `svg`, `pdf` |
+| `jpgQuality` | number | 아니오 | - | JPEG 품질 (0.1~1.0, exportFormat이 bitmap 또는 jpg일 때 적용) |
 | `pdfExportMode` | string | 아니오 | - | PDF 내보내기 모드: `firstPage`, `allPages`, `selectedPage` |
 | `selectedPdfPage` | integer | 아니오 | - | 선택된 PDF 페이지 번호 (pdfExportMode가 selectedPage일 때) |
 | `exportNameTemplate` | string | 아니오 | - | 출력 파일명 템플릿 |
@@ -253,7 +253,7 @@ Content-Type: application/json
 | `cols` | integer | 아니오 | 2 | 가로 분할 수 (1~100) |
 | `ratioW` | number | 아니오 | 1.0 | 가로 비율 (0.1~10.0) |
 | `ratioH` | number | 아니오 | 1.0 | 세로 비율 (0.1~10.0) |
-| `exportFormat` | string | 아니오 | `bitmap` | 출력 형식: `bitmap`, `jpg`, `svg`, `pdf` |
+| `exportFormat` | string | 아니오 | `bitmap` | 출력 형식: `bitmap` (PNG), `jpg`, `svg`, `pdf` |
 | `jpgQuality` | number | 아니오 | 0.8 | JPEG 품질 (0.1~1.0) |
 | `exportNameTemplate` | string | 아니오 | `{name}_{rr}-{cc}` | 출력 파일명 템플릿 |
 
@@ -261,8 +261,8 @@ Content-Type: application/json
 
 ```json
 {
-  "path": "/tmp/banner.png",
-  "outputDir": "/tmp/output",
+  "path": "_public/resource/contents/example1.png",
+  "outputDir": "_public/resource/contents_result",
   "rows": 3,
   "cols": 4,
   "exportFormat": "bitmap"
@@ -288,7 +288,7 @@ curl http://localhost:3011/
 # 파일 로드
 curl -X POST http://localhost:3011/api/load \
   -H "Content-Type: application/json" \
-  -d '{"path": "/tmp/banner.png"}'
+  -d '{"path": "_public/resource/contents/example1.png"}'
 
 # 분할 설정 변경
 curl -X PUT http://localhost:3011/api/config \
@@ -298,12 +298,12 @@ curl -X PUT http://localhost:3011/api/config \
 # 내보내기
 curl -X POST http://localhost:3011/api/export \
   -H "Content-Type: application/json" \
-  -d '{"outputDir": "/tmp/output"}'
+  -d '{"outputDir": "_public/resource/contents_result"}'
 
 # 원스텝 분할 (권장)
 curl -X POST http://localhost:3011/api/split \
   -H "Content-Type: application/json" \
-  -d '{"path": "/tmp/banner.png", "outputDir": "/tmp/output", "rows": 2, "cols": 3}'
+  -d '{"path": "_public/resource/contents/example1.png", "outputDir": "_public/resource/contents_result", "rows": 2, "cols": 3}'
 
 # 현재 상태 조회
 curl http://localhost:3011/api/status
@@ -323,8 +323,8 @@ BASE_URL = 'http://localhost:3011'
 response = requests.post(
     f'{BASE_URL}/api/split',
     json={
-        'path': '/tmp/banner.png',
-        'outputDir': '/tmp/output',
+        'path': '_public/resource/contents/example1.png',
+        'outputDir': '_public/resource/contents_result',
         'rows': 2,
         'cols': 3,
         'exportFormat': 'bitmap'
@@ -346,7 +346,7 @@ print(f"파일 목록: {result['data']['files']}")
 | cols | 가로 분할 수 | 1~100 | 2 |
 | ratioW | 가로 비율 | 0.1~10.0 | 1.0 |
 | ratioH | 세로 비율 | 0.1~10.0 | 1.0 |
-| exportFormat | 출력 형식 | bitmap, jpg, svg, pdf | bitmap |
+| exportFormat | 출력 형식 | bitmap (PNG), jpg, svg, pdf | bitmap |
 | jpgQuality | JPEG 품질 | 0.1~1.0 | 0.8 |
 | exportNameTemplate | 파일명 템플릿 | - | `{name}_{rr}-{cc}` |
 

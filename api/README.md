@@ -19,7 +19,7 @@ The API server is **disabled by default** and must be explicitly enabled in the 
 - The API server is **disabled by default** and must be explicitly enabled in the app settings.
 - By default, only **localhost (127.0.0.1)** connections are allowed.
 - External access can be enabled via the "Allow External Access" checkbox in settings, where you can specify allowed IP ranges in CIDR notation (e.g., `192.168.0.0/24`).
-- Connections from IPs outside the allowed CIDR range receive a `403 Forbidden` response.
+- Connections from IPs outside the allowed CIDR range are immediately rejected (connection cancelled without HTTP response).
 - localhost is always allowed regardless of CIDR settings.
 
 ---
@@ -106,8 +106,8 @@ Content-Type: application/json
 | `cols` | integer | No | - | Number of horizontal splits (1~100) |
 | `ratioW` | number | No | - | Horizontal ratio (0.1~10.0) |
 | `ratioH` | number | No | - | Vertical ratio (0.1~10.0) |
-| `exportFormat` | string | No | - | Output format: `bitmap`, `jpg`, `svg`, `pdf` |
-| `jpgQuality` | number | No | - | JPEG quality (0.1~1.0, only when exportFormat is bitmap) |
+| `exportFormat` | string | No | - | Output format: `bitmap` (PNG), `jpg`, `svg`, `pdf` |
+| `jpgQuality` | number | No | - | JPEG quality (0.1~1.0, applicable when exportFormat is bitmap or jpg) |
 | `pdfExportMode` | string | No | - | PDF export mode: `firstPage`, `allPages`, `selectedPage` |
 | `selectedPdfPage` | integer | No | - | Selected PDF page number (only when pdfExportMode is selectedPage) |
 | `exportNameTemplate` | string | No | - | Output filename template |
@@ -253,7 +253,7 @@ Performs file loading, configuration update, and export in a single request. **T
 | `cols` | integer | No | 2 | Number of horizontal splits (1~100) |
 | `ratioW` | number | No | 1.0 | Horizontal ratio (0.1~10.0) |
 | `ratioH` | number | No | 1.0 | Vertical ratio (0.1~10.0) |
-| `exportFormat` | string | No | `bitmap` | Output format: `bitmap`, `jpg`, `svg`, `pdf` |
+| `exportFormat` | string | No | `bitmap` | Output format: `bitmap` (PNG), `jpg`, `svg`, `pdf` |
 | `jpgQuality` | number | No | 0.8 | JPEG quality (0.1~1.0) |
 | `exportNameTemplate` | string | No | `{name}_{rr}-{cc}` | Output filename template |
 
@@ -261,8 +261,8 @@ Performs file loading, configuration update, and export in a single request. **T
 
 ```json
 {
-  "path": "/tmp/banner.png",
-  "outputDir": "/tmp/output",
+  "path": "_public/resource/contents/example1.png",
+  "outputDir": "_public/resource/contents_result",
   "rows": 3,
   "cols": 4,
   "exportFormat": "bitmap"
@@ -288,7 +288,7 @@ curl http://localhost:3011/
 # Load file
 curl -X POST http://localhost:3011/api/load \
   -H "Content-Type: application/json" \
-  -d '{"path": "/tmp/banner.png"}'
+  -d '{"path": "_public/resource/contents/example1.png"}'
 
 # Update split configuration
 curl -X PUT http://localhost:3011/api/config \
@@ -298,12 +298,12 @@ curl -X PUT http://localhost:3011/api/config \
 # Export
 curl -X POST http://localhost:3011/api/export \
   -H "Content-Type: application/json" \
-  -d '{"outputDir": "/tmp/output"}'
+  -d '{"outputDir": "_public/resource/contents_result"}'
 
 # One-step split (recommended)
 curl -X POST http://localhost:3011/api/split \
   -H "Content-Type: application/json" \
-  -d '{"path": "/tmp/banner.png", "outputDir": "/tmp/output", "rows": 2, "cols": 3}'
+  -d '{"path": "_public/resource/contents/example1.png", "outputDir": "_public/resource/contents_result", "rows": 2, "cols": 3}'
 
 # Get current status
 curl http://localhost:3011/api/status
@@ -323,8 +323,8 @@ BASE_URL = 'http://localhost:3011'
 response = requests.post(
     f'{BASE_URL}/api/split',
     json={
-        'path': '/tmp/banner.png',
-        'outputDir': '/tmp/output',
+        'path': '_public/resource/contents/example1.png',
+        'outputDir': '_public/resource/contents_result',
         'rows': 2,
         'cols': 3,
         'exportFormat': 'bitmap'
@@ -346,7 +346,7 @@ print(f"File list: {result['data']['files']}")
 | cols | Number of horizontal splits | 1~100 | 2 |
 | ratioW | Horizontal ratio | 0.1~10.0 | 1.0 |
 | ratioH | Vertical ratio | 0.1~10.0 | 1.0 |
-| exportFormat | Output format | bitmap, jpg, svg, pdf | bitmap |
+| exportFormat | Output format | bitmap (PNG), jpg, svg, pdf | bitmap |
 | jpgQuality | JPEG quality | 0.1~1.0 | 0.8 |
 | exportNameTemplate | Filename template | - | `{name}_{rr}-{cc}` |
 

@@ -187,7 +187,7 @@ Load an image, PDF, or SVG file. Supported formats: PNG, JPG, JPEG, TIFF, BMP, G
 
 **Usage example** (ask Claude):
 ```
-Load the file /Users/me/Desktop/banner.png into fBanner
+Load the file _public/resource/contents/example1.png into fBanner
 ```
 
 ---
@@ -204,7 +204,7 @@ Export the currently loaded file as grid-split output files. A file must be load
 
 **Usage example** (ask Claude):
 ```
-Export the split files to ~/Desktop/output
+Export the split files to _public/resource/contents_result
 ```
 
 ---
@@ -229,7 +229,7 @@ Perform file loading, configuration, and export in a single step. Recommended fo
 
 **Usage example** (ask Claude):
 ```
-Split /Users/me/Desktop/banner.png into a 3x4 grid and save to ~/Desktop/output as PNG
+Split _public/resource/contents/example1.png into a 3x4 grid and save to _public/resource/contents_result as PNG
 ```
 
 ---

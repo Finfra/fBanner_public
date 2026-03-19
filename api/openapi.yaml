@@ -44,7 +44,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessResponse"
+                $ref: "#/components/schemas/StatusResponse"
               examples:
                 empty:
                   summary: No file loaded
@@ -66,7 +66,7 @@ paths:
                         category: bitmap
                         pixelWidth: 1920
                         pixelHeight: 1080
-                        url: /path/to/banner.png
+                        url: _public/resource/contents/example1.png
                       config:
                         rows: 2
                         cols: 3
@@ -153,7 +153,7 @@ paths:
                 path:
                   type: string
                   description: Absolute path to the input file
-                  example: /path/to/banner.png
+                  example: _public/resource/contents/example1.png
       responses:
         "200":
           description: File loaded successfully
@@ -264,6 +264,38 @@ components:
         data:
           type: object
 
+    StatusResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+          properties:
+            appState:
+              type: string
+              enum: [empty, loaded, exporting, exported, error]
+              description: Current application state
+            file:
+              $ref: "#/components/schemas/FileInfo"
+              nullable: true
+            config:
+              $ref: "#/components/schemas/SplitConfig"
+              nullable: true
+            progress:
+              type: number
+              format: float
+              description: Export progress (0.0~1.0, present during exporting state)
+            fileCount:
+              type: integer
+              description: Number of exported files (present after export)
+            errorMessage:
+              type: string
+              description: Error message (present in error state)
+
     ErrorResponse:
       type: object
       required:
@@ -319,7 +351,7 @@ components:
         url:
           type: string
           description: Absolute file path
-          example: /path/to/banner.png
+          example: _public/resource/contents/example1.png
 
     SplitConfig:
       type: object
@@ -360,8 +392,22 @@ components:
           format: float
           minimum: 0.1
           maximum: 1.0
-          description: JPEG quality (only applicable when exportFormat is bitmap)
+          description: JPEG quality (applicable when exportFormat is bitmap or jpg)
           example: 0.8
+        imageAspectW:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+          description: Image aspect ratio width
+          example: 1.78
+        imageAspectH:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+          description: Image aspect ratio height
+          example: 1.0
         pdfExportMode:
           type: string
           enum: [firstPage, allPages, selectedPage]
@@ -411,6 +457,16 @@ components:
           format: float
           minimum: 0.1
           maximum: 1.0
+        imageAspectW:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
+        imageAspectH:
+          type: number
+          format: float
+          minimum: 0.1
+          maximum: 10.0
         pdfExportMode:
           type: string
           enum: [firstPage, allPages, selectedPage]
@@ -429,11 +485,11 @@ components:
         path:
           type: string
           description: Absolute path to the input file
-          example: /tmp/banner.png
+          example: _public/resource/contents/example1.png
         outputDir:
           type: string
           description: Absolute path to the output directory
-          example: /tmp/output
+          example: _public/resource/contents_result
         rows:
           type: integer
           minimum: 1

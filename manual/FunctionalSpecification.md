@@ -97,7 +97,7 @@ fBanner에 내장된 NWListener(`Network.framework`) 기반 HTTP REST 서버로,
 | **기본 포트** | `3011` | 설정 화면에서 변경 가능 |
 | **API 활성화 상태** | `꺼짐 (OFF)` | 사용자가 설정에서 명시적으로 활성화해야 동작 |
 | **외부 접속 허용** | `꺼짐 (OFF)` | 체크 시 CIDR 입력 가능 |
-| **허용 CIDR** | `192.168.0.0/24` | 외부 접속 허용 시 기본 범위 |
+| **허용 CIDR** | 사용자 설정 | 외부 접속 허용 시 CIDR 입력 (기본: localhost만 허용) |
 
 ## 5.3. 엔드포인트 (7개)
 
@@ -190,8 +190,8 @@ fBanner에 내장된 NWListener(`Network.framework`) 기반 HTTP REST 서버로,
 **요청 예시:**
 ```json
 {
-  "path": "/tmp/banner.png",
-  "outputDir": "/tmp/output",
+  "path": "_public/resource/contents/example1.png",
+  "outputDir": "_public/resource/contents_result",
   "rows": 3,
   "cols": 4,
   "exportFormat": "bitmap"
@@ -206,8 +206,8 @@ fBanner에 내장된 NWListener(`Network.framework`) 기반 HTTP REST 서버로,
 | `cols` | int | 1-100 | 2 | 가로 분할 수 |
 | `ratioW` | float | 0.1-10.0 | 1.0 | 가로 비율 가중치 |
 | `ratioH` | float | 0.1-10.0 | 1.0 | 세로 비율 가중치 |
-| `exportFormat` | string | bitmap/jpg/svg/pdf | bitmap | 출력 파일 형식 |
-| `jpgQuality` | float | 0.1-1.0 | 0.8 | JPEG 품질 (exportFormat이 jpg일 때) |
+| `exportFormat` | string | bitmap(PNG)/jpg/svg/pdf | bitmap | 출력 파일 형식 (bitmap은 PNG 포맷으로 내보내기) |
+| `jpgQuality` | float | 0.1-1.0 | 0.8 | JPEG 품질 (exportFormat이 bitmap 또는 jpg일 때 적용) |
 | `pdfExportMode` | string | firstPage/allPages/selectedPage | firstPage | PDF 내보내기 모드 |
 | `selectedPdfPage` | int | 1+ | 1 | PDF 페이지 번호 (selectedPage 모드일 때) |
 | `exportNameTemplate` | string | - | `{name}_{rr}-{cc}` | 출력 파일명 템플릿 |
@@ -221,7 +221,7 @@ curl http://localhost:3011/
 # 파일 로드
 curl -X POST http://localhost:3011/api/load \
   -H "Content-Type: application/json" \
-  -d '{"path":"/tmp/banner.png"}'
+  -d '{"path":"_public/resource/contents/example1.png"}'
 
 # 설정 변경
 curl -X PUT http://localhost:3011/api/config \
@@ -231,12 +231,12 @@ curl -X PUT http://localhost:3011/api/config \
 # 내보내기 실행
 curl -X POST http://localhost:3011/api/export \
   -H "Content-Type: application/json" \
-  -d '{"outputDir":"/tmp/output"}'
+  -d '{"outputDir":"_public/resource/contents_result"}'
 
 # 원스텝 분할 (로드 + 설정 + 내보내기)
 curl -X POST http://localhost:3011/api/split \
   -H "Content-Type: application/json" \
-  -d '{"path":"/tmp/banner.png","outputDir":"/tmp/output","rows":3,"cols":4}'
+  -d '{"path":"_public/resource/contents/example1.png","outputDir":"_public/resource/contents_result","rows":3,"cols":4}'
 
 # 앱 상태 조회
 curl http://localhost:3011/api/status | python3 -m json.tool
@@ -301,7 +301,7 @@ ln -sf _public/agents/claude/skills/fbanner .claude/skills/fbanner
 | `--rows=<N>` | 세로 분할 수 | `2` |
 | `--cols=<N>` | 가로 분할 수 | `2` |
 | `--format=<fmt>` | 출력 형식 (`bitmap`, `jpg`, `svg`, `pdf`) | `bitmap` |
-| `--output=<dir>` | 출력 디렉토리 | `/tmp/fbanner-output` |
+| `--output=<dir>` | 출력 디렉토리 | `_public/resource/contents_result` |
 | `--ratio-w=<N>` | 가로 비율 | `1.0` |
 | `--ratio-h=<N>` | 세로 비율 | `1.0` |
 | `--server=<url>` | 서버 주소 변경 | `http://localhost:3011` |
@@ -309,11 +309,11 @@ ln -sf _public/agents/claude/skills/fbanner .claude/skills/fbanner
 ### 사용 예시
 
 ```
-/fbanner:fbanner split /tmp/banner.png --rows=3 --cols=4
-/fbanner:fbanner split /tmp/document.pdf --rows=2 --cols=2 --format=svg --output=/tmp/tiles
-/fbanner:fbanner load /tmp/image.png
+/fbanner:fbanner split _public/resource/contents/example1.png --rows=3 --cols=4
+/fbanner:fbanner split _public/resource/contents/example3.pdf --rows=2 --cols=2 --format=svg --output=_public/resource/contents_result/tiles
+/fbanner:fbanner load _public/resource/contents/example1.png
 /fbanner:fbanner config --rows=2 --cols=3 --format=svg
-/fbanner:fbanner export /tmp/output
+/fbanner:fbanner export _public/resource/contents_result
 /fbanner:fbanner status
 ```
 
@@ -419,16 +419,16 @@ npm install
 ### `health_check` — 서버 상태 확인
 fBanner 서버가 동작 중인지 확인합니다. 파라미터 없음.
 
-### `split_image` — 이미지 분할
+### `split_one_step` — 이미지 분할
 파일을 로드하고 그리드로 분할하여 내보냅니다.
 
 | 파라미터 | 타입 | 필수 | 기본값 | 설명 |
 |----------|------|------|--------|------|
 | `path` | string | 예 | - | 입력 파일 절대 경로 |
-| `output_dir` | string | 예 | - | 출력 디렉토리 경로 |
+| `outputDir` | string | 예 | - | 출력 디렉토리 경로 |
 | `rows` | int | 아니오 | `2` | 세로 분할 수 |
 | `cols` | int | 아니오 | `2` | 가로 분할 수 |
-| `export_format` | string | 아니오 | `bitmap` | 출력 형식 |
+| `exportFormat` | string | 아니오 | `bitmap` | 출력 형식 |
 
 ### `get_status` — 앱 상태 조회
 현재 로드된 파일, 분할 설정, 내보내기 상태를 조회합니다.

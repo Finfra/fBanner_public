@@ -119,7 +119,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 for ext in png jpg jpeg; do
-  FOUND=$(find "${PROJECT_ROOT}/resource" -name "*.${ext}" -type f 2>/dev/null | head -1)
+  FOUND=$(find "${PROJECT_ROOT}/_public/resource/contents" -name "*.${ext}" -type f 2>/dev/null | head -1)
   if [ -n "$FOUND" ]; then
     TEST_IMG="$FOUND"
     break
@@ -181,7 +181,7 @@ if [ -n "$TEST_IMG" ]; then
   rm -rf "$OUTPUT_DIR"
   echo ""
 else
-  echo "[8-9] Skipped: no test image found in resource/"
+  echo "[8-9] Skipped: no test image found in _public/resource/contents/"
   echo ""
 fi
 
