@@ -1,5 +1,5 @@
 {
-  "name": "fBanner",
+  "name": "fbanner",
   "owner": {
     "name": "nowage",
     "url": "https://github.com/nowage"
@@ -7,8 +7,12 @@
   "plugins": [
     {
       "name": "fbanner",
-      "source": "./agents/claude",
-      "description": "Split images/PDFs/SVGs into grid tiles via fBanner REST API",
+      "source": {
+        "type": "redirect",
+        "url": "https://github.com/Finfra/f-claude-plugins",
+        "path": "fBanner"
+      },
+      "description": "Moved to Finfra/f-claude-plugins repository",
       "version": "1.0.0"
     }
   ]
