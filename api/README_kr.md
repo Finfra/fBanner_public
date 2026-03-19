@@ -261,8 +261,8 @@ Content-Type: application/json
 
 ```json
 {
-  "path": "_public/resource/contents/example1.png",
-  "outputDir": "_public/resource/contents_result",
+  "path": "resource/contents/example1.png",
+  "outputDir": "resource/contents_result",
   "rows": 3,
   "cols": 4,
   "exportFormat": "bitmap"
@@ -288,7 +288,7 @@ curl http://localhost:3011/
 # 파일 로드
 curl -X POST http://localhost:3011/api/load \
   -H "Content-Type: application/json" \
-  -d '{"path": "_public/resource/contents/example1.png"}'
+  -d '{"path": "resource/contents/example1.png"}'
 
 # 분할 설정 변경
 curl -X PUT http://localhost:3011/api/config \
@@ -298,12 +298,12 @@ curl -X PUT http://localhost:3011/api/config \
 # 내보내기
 curl -X POST http://localhost:3011/api/export \
   -H "Content-Type: application/json" \
-  -d '{"outputDir": "_public/resource/contents_result"}'
+  -d '{"outputDir": "resource/contents_result"}'
 
 # 원스텝 분할 (권장)
 curl -X POST http://localhost:3011/api/split \
   -H "Content-Type: application/json" \
-  -d '{"path": "_public/resource/contents/example1.png", "outputDir": "_public/resource/contents_result", "rows": 2, "cols": 3}'
+  -d '{"path": "resource/contents/example1.png", "outputDir": "resource/contents_result", "rows": 2, "cols": 3}'
 
 # 현재 상태 조회
 curl http://localhost:3011/api/status
@@ -323,8 +323,8 @@ BASE_URL = 'http://localhost:3011'
 response = requests.post(
     f'{BASE_URL}/api/split',
     json={
-        'path': '_public/resource/contents/example1.png',
-        'outputDir': '_public/resource/contents_result',
+        'path': 'resource/contents/example1.png',
+        'outputDir': 'resource/contents_result',
         'rows': 2,
         'cols': 3,
         'exportFormat': 'bitmap'
@@ -366,10 +366,10 @@ print(f"파일 목록: {result['data']['files']}")
 
 ```bash
 # 자동화 테스트 (기본: localhost:3011)
-bash _public/api/test-api.sh
+bash api/test-api.sh
 
 # 원격 서버 테스트
-bash _public/api/test-api.sh --server=http://192.168.0.10:3011
+bash api/test-api.sh --server=http://192.168.0.10:3011
 ```
 
 테스트 항목:

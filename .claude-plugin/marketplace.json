@@ -1,0 +1,15 @@
+{
+  "name": "fBanner",
+  "owner": {
+    "name": "nowage",
+    "url": "https://github.com/nowage"
+  },
+  "plugins": [
+    {
+      "name": "fbanner",
+      "source": "agents/claude",
+      "description": "Split images/PDFs/SVGs into grid tiles via fBanner REST API",
+      "version": "1.0.0"
+    }
+  ]
+}

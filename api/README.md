@@ -261,8 +261,8 @@ Performs file loading, configuration update, and export in a single request. **T
 
 ```json
 {
-  "path": "_public/resource/contents/example1.png",
-  "outputDir": "_public/resource/contents_result",
+  "path": "resource/contents/example1.png",
+  "outputDir": "resource/contents_result",
   "rows": 3,
   "cols": 4,
   "exportFormat": "bitmap"
@@ -288,7 +288,7 @@ curl http://localhost:3011/
 # Load file
 curl -X POST http://localhost:3011/api/load \
   -H "Content-Type: application/json" \
-  -d '{"path": "_public/resource/contents/example1.png"}'
+  -d '{"path": "resource/contents/example1.png"}'
 
 # Update split configuration
 curl -X PUT http://localhost:3011/api/config \
@@ -298,12 +298,12 @@ curl -X PUT http://localhost:3011/api/config \
 # Export
 curl -X POST http://localhost:3011/api/export \
   -H "Content-Type: application/json" \
-  -d '{"outputDir": "_public/resource/contents_result"}'
+  -d '{"outputDir": "resource/contents_result"}'
 
 # One-step split (recommended)
 curl -X POST http://localhost:3011/api/split \
   -H "Content-Type: application/json" \
-  -d '{"path": "_public/resource/contents/example1.png", "outputDir": "_public/resource/contents_result", "rows": 2, "cols": 3}'
+  -d '{"path": "resource/contents/example1.png", "outputDir": "resource/contents_result", "rows": 2, "cols": 3}'
 
 # Get current status
 curl http://localhost:3011/api/status
@@ -323,8 +323,8 @@ BASE_URL = 'http://localhost:3011'
 response = requests.post(
     f'{BASE_URL}/api/split',
     json={
-        'path': '_public/resource/contents/example1.png',
-        'outputDir': '_public/resource/contents_result',
+        'path': 'resource/contents/example1.png',
+        'outputDir': 'resource/contents_result',
         'rows': 2,
         'cols': 3,
         'exportFormat': 'bitmap'
@@ -366,10 +366,10 @@ Output example: `banner_01-02.png`
 
 ```bash
 # Automated tests (default: localhost:3011)
-bash _public/api/test-api.sh
+bash api/test-api.sh
 
 # Remote server tests
-bash _public/api/test-api.sh --server=http://192.168.0.10:3011
+bash api/test-api.sh --server=http://192.168.0.10:3011
 ```
 
 Test cases:

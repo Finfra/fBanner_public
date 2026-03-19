@@ -31,7 +31,7 @@ npm install -g fbanner-mcp
 
 ```bash
 git clone https://github.com/nowage/fBanner.git
-cd fBanner/_public/mcp
+cd fBanner_public/mcp
 npm install
 ```
 
@@ -60,7 +60,7 @@ npm install
     "fbanner": {
       "command": "node",
       "args": [
-        "{PROJECT_ROOT-type-or-paste-it}/_public/mcp/index.js"
+        "{PROJECT_ROOT-type-or-paste-it}/mcp/index.js"
       ]
     }
   }
@@ -187,7 +187,7 @@ fBanner 서버 상태를 확인합니다.
 
 **사용 예시** (Claude에게 요청):
 ```
-_public/resource/contents/example1.png 파일을 fBanner에 로드해줘
+resource/contents/example1.png 파일을 fBanner에 로드해줘
 ```
 
 ---
@@ -204,7 +204,7 @@ _public/resource/contents/example1.png 파일을 fBanner에 로드해줘
 
 **사용 예시** (Claude에게 요청):
 ```
-분리된 파일을 _public/resource/contents_result으로 내보내줘
+분리된 파일을 resource/contents_result으로 내보내줘
 ```
 
 ---
@@ -229,7 +229,7 @@ _public/resource/contents/example1.png 파일을 fBanner에 로드해줘
 
 **사용 예시** (Claude에게 요청):
 ```
-_public/resource/contents/example1.png를 3x4 그리드로 분리해서 _public/resource/contents_result에 PNG로 저장해줘
+resource/contents/example1.png를 3x4 그리드로 분리해서 resource/contents_result에 PNG로 저장해줘
 ```
 
 ---
@@ -256,7 +256,7 @@ curl http://localhost:3011/
 ## npm 배포
 
 ```bash
-cd _public/mcp
+cd mcp
 npm publish
 ```
 

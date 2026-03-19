@@ -31,7 +31,7 @@ Run directly via `npx` in your MCP configuration.
 
 ```bash
 git clone https://github.com/nowage/fBanner.git
-cd fBanner/_public/mcp
+cd fBanner_public/mcp
 npm install
 ```
 
@@ -60,7 +60,7 @@ npm install
     "fbanner": {
       "command": "node",
       "args": [
-        "{PROJECT_ROOT-type-or-paste-it}/_public/mcp/index.js"
+        "{PROJECT_ROOT-type-or-paste-it}/mcp/index.js"
       ]
     }
   }
@@ -187,7 +187,7 @@ Load an image, PDF, or SVG file. Supported formats: PNG, JPG, JPEG, TIFF, BMP, G
 
 **Usage example** (ask Claude):
 ```
-Load the file _public/resource/contents/example1.png into fBanner
+Load the file resource/contents/example1.png into fBanner
 ```
 
 ---
@@ -204,7 +204,7 @@ Export the currently loaded file as grid-split output files. A file must be load
 
 **Usage example** (ask Claude):
 ```
-Export the split files to _public/resource/contents_result
+Export the split files to resource/contents_result
 ```
 
 ---
@@ -229,7 +229,7 @@ Perform file loading, configuration, and export in a single step. Recommended fo
 
 **Usage example** (ask Claude):
 ```
-Split _public/resource/contents/example1.png into a 3x4 grid and save to _public/resource/contents_result as PNG
+Split resource/contents/example1.png into a 3x4 grid and save to resource/contents_result as PNG
 ```
 
 ---
@@ -256,7 +256,7 @@ curl http://localhost:3011/
 ## Publishing to npm
 
 ```bash
-cd _public/mcp
+cd mcp
 npm publish
 ```
 

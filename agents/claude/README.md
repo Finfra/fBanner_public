@@ -25,10 +25,10 @@ Splits images, PDFs, and SVGs into grid tiles via the fBanner REST API.
 
 **Usage:**
 ```
-/fbanner:fbanner split _public/resource/contents/example1.png --rows=3 --cols=4
-/fbanner:fbanner load _public/resource/contents/example1.png
+/fbanner:fbanner split resource/contents/example1.png --rows=3 --cols=4
+/fbanner:fbanner load resource/contents/example1.png
 /fbanner:fbanner config --rows=2 --cols=3 --format=svg
-/fbanner:fbanner export _public/resource/contents_result
+/fbanner:fbanner export resource/contents_result
 /fbanner:fbanner status
 ```
 
@@ -46,7 +46,7 @@ Splits images, PDFs, and SVGs into grid tiles via the fBanner REST API.
 | `--rows=<N>`       | Vertical splits          | `2`                     |
 | `--cols=<N>`       | Horizontal splits        | `2`                     |
 | `--format=<fmt>`   | Export format             | `bitmap`                |
-| `--output=<dir>`   | Output directory          | `_public/resource/contents_result`   |
+| `--output=<dir>`   | Output directory          | `resource/contents_result`   |
 | `--ratio-w=<N>`    | Horizontal ratio          | `1.0`                   |
 | `--ratio-h=<N>`    | Vertical ratio            | `1.0`                   |
 | `--server=<url>`   | Change server address     | `http://localhost:3011` |
@@ -69,25 +69,24 @@ Splits images, PDFs, and SVGs into grid tiles via the fBanner REST API.
 
 ### Option 1: Plugin Install (Recommended)
 
-```bash
-/plugin marketplace add nowage/fBanner
-/plugin install fbanner
+Run in Claude Code:
+```
+/plugin marketplace add finfra/fBanner_public
+/plugin install fbanner@fBanner_public
 ```
 
 ### Option 2: Manual Copy
 
-Copy the plugin directory to your project:
-
 ```bash
-# From fBanner project root
-cp -r _public/agents/claude/.claude-plugin .claude-plugin
-cp -r _public/agents/claude/skills .claude/skills
+# After cloning fBanner_public repo
+cp -r agents/claude/plugin.json .claude-plugin/plugin.json
+cp -r agents/claude/skills .claude/skills
 ```
 
 ### Option 3: Symbolic Link
 
 ```bash
-ln -sf _public/agents/claude/skills/fbanner .claude/skills/fbanner
+ln -sf agents/claude/skills/fbanner .claude/skills/fbanner
 ```
 
 ---
@@ -108,7 +107,7 @@ The fBanner REST API server must be running:
 
 | Extension                  | Location       | Description                                            |
 | -------------------------- | -------------- | ------------------------------------------------------ |
-| [MCP Server](../../mcp/)  | `_public/mcp/` | Grid split via MCP protocol (Claude Desktop compatible) |
+| [MCP Server](../../mcp/)  | `mcp/` | Grid split via MCP protocol (Claude Desktop compatible) |
 
 ---
 

@@ -62,7 +62,7 @@ The fBanner REST API server (`http://localhost:3011`) must be running:
        "exportFormat": "<FORMAT>"
      }'
    ```
-   - If `--output` is not specified, use `_public/resource/contents_result` as default output directory.
+   - If `--output` is not specified, use `resource/contents_result` as default output directory.
    - If `--rows` / `--cols` are not specified, default to 2x2.
 
    ### `load`
@@ -129,7 +129,7 @@ PNG, JPG, JPEG, TIFF, BMP, GIF, PDF, SVG
 - `--rows=<N>`: Number of vertical splits (default: 2)
 - `--cols=<N>`: Number of horizontal splits (default: 2)
 - `--format=<fmt>`: Export format: `bitmap`, `jpg`, `svg`, `pdf` (default: bitmap)
-- `--output=<dir>`: Output directory path (default: `_public/resource/contents_result`)
+- `--output=<dir>`: Output directory path (default: `resource/contents_result`)
 - `--ratio-w=<N>`: Horizontal ratio (default: 1.0)
 - `--ratio-h=<N>`: Vertical ratio (default: 1.0)
 - `--server=<url>`: Change server address (default: `http://localhost:3011`)
@@ -137,10 +137,10 @@ PNG, JPG, JPEG, TIFF, BMP, GIF, PDF, SVG
 ## Examples
 
 ```
-/fbanner:fbanner split _public/resource/contents/example1.png --rows=3 --cols=4
-/fbanner:fbanner split _public/resource/contents/example3.pdf --rows=2 --cols=2 --format=svg --output=_public/resource/contents_result/tiles
-/fbanner:fbanner load _public/resource/contents/example1.png
+/fbanner:fbanner split resource/contents/example1.png --rows=3 --cols=4
+/fbanner:fbanner split resource/contents/example3.pdf --rows=2 --cols=2 --format=svg --output=resource/contents_result/tiles
+/fbanner:fbanner load resource/contents/example1.png
 /fbanner:fbanner config --rows=2 --cols=3 --format=svg
-/fbanner:fbanner export _public/resource/contents_result
+/fbanner:fbanner export resource/contents_result
 /fbanner:fbanner status
 ```
