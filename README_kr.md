@@ -1,4 +1,6 @@
-# fBanner
+[![en](https://img.shields.io/badge/lang-en-blue.svg)](./README.md)
+
+# <img src="./manual/app-icon.png" width="28"> [fBanner](https://finfra.kr/product/fBanner/kr/index.html)
 
 > **복사하는 순간, 배너 이미지가 완성됩니다.**
 
@@ -21,8 +23,18 @@ macOS 메뉴 바 앱으로, URL이나 텍스트를 복사하면 자동으로 배
 
 | 언어 | 링크 |
 |------|------|
-| English | [fBanner - Product Page](http://finfra.kr/product/fBanner/en/index.html) |
-| 한국어 | [fBanner - 제품 페이지](http://finfra.kr/product/fBanner/kr/index.html) |
+| English | [fBanner - Product Page](https://finfra.kr/product/fBanner/en/index.html) |
+| 한국어 | [fBanner - 제품 페이지](https://finfra.kr/product/fBanner/kr/index.html) |
+
+### 다른 finfra 앱
+
+| 앱 | 설명 | 링크 |
+|----|------|------|
+| fSnippet | 모든 텍스트의 확장, 강력한 스니펫 도구 | [제품 페이지](https://finfra.kr/product/fSnippet/kr/index.html) |
+| fWarrange | 가장 완벽한 Mac 창 관리, 손쉬운 레이아웃 복원 | [제품 페이지](https://finfra.kr/product/fWarrange/kr/index.html) |
+| fBoard | 나만의 맞춤형 스크린 보드 | [제품 페이지](https://finfra.kr/product/fBoard/kr/index.html) |
+| fQRGen | 클립보드를 복사하는 순간, QR 코드가 완성 | [제품 페이지](https://finfra.kr/product/fQRGen/kr/index.html) |
+| fGoogleSheet | 내 맥에서 가장 빠른 구글 시트 메뉴바 앱 | [제품 페이지](https://finfra.kr/product/fGoogleSheet/kr/index.html) |
 
 ## 문서
 

@@ -1,4 +1,6 @@
-# fBanner
+[![ko](https://img.shields.io/badge/lang-ko-red.svg)](./README_kr.md)
+
+# <img src="./manual/app-icon.png" width="28"> [fBanner](https://finfra.kr/product/fBanner/en/index.html)
 
 > **The moment you copy, your banner image is ready.**
 
@@ -21,8 +23,18 @@ macOS Menu Bar App for instant banner image generation. Copy a URL or text, and 
 
 | Language | Link |
 |----------|------|
-| English | [fBanner - Product Page](http://finfra.kr/product/fBanner/en/index.html) |
-| Korean | [fBanner - 제품 페이지](http://finfra.kr/product/fBanner/kr/index.html) |
+| English | [fBanner - Product Page](https://finfra.kr/product/fBanner/en/index.html) |
+| Korean | [fBanner - 제품 페이지](https://finfra.kr/product/fBanner/kr/index.html) |
+
+### Other finfra Apps
+
+| App | Description | Link |
+|-----|-------------|------|
+| fSnippet | Powerful text expansion & snippet tool | [Product Page](https://finfra.kr/product/fSnippet/en/index.html) |
+| fWarrange | The ultimate Mac window manager & layout restore | [Product Page](https://finfra.kr/product/fWarrange/en/index.html) |
+| fBoard | Your personalized screen board | [Product Page](https://finfra.kr/product/fBoard/en/index.html) |
+| fQRGen | Clipboard to QR code, instantly | [Product Page](https://finfra.kr/product/fQRGen/en/index.html) |
+| fGoogleSheet | The fastest Google Sheets menu bar app for Mac | [Product Page](https://finfra.kr/product/fGoogleSheet/en/index.html) |
 
 ## Documentation
 
