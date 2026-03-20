@@ -20,3 +20,5 @@ Temporary Items
 # agent
 .claude
 
+# editor
+.vscode
